@@ -6,11 +6,17 @@ if (!showdown.hasOwnProperty('helper')) {
   showdown.helper = {};
 }
 
-if (typeof this.document === 'undefined' && typeof this.window === 'undefined') {
-  var jsdom = require('jsdom');
-  this.window = new jsdom.JSDOM('', {}).window; // jshint ignore:line
-}
+// if (typeof this.document === 'undefined' && typeof this.window === 'undefined') {
+//   var jsdom = require('jsdom');
+//   this.window = new jsdom.JSDOM('', {}).window; // jshint ignore:line
+// }
+// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
+// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
+// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
+// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
+this.window = window;
 showdown.helper.document = this.window.document;
+//END HACK
 
 /**
  * Check if var is string
