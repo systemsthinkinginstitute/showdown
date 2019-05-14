@@ -132,7 +132,7 @@
     //evt = createEvent(rgx, evtRootName + '.captureEnd', wholeMatch, text, id, url, title, options, globals);
 
     var className = options.linkClassName || '';
-    var result = '<a' + 'class="' + className + '"' + 'href="' + url + '"' + title + target + '>' + text + '</a>';
+    var result = '<a ' + 'class="' + className + '" ' + 'href="' + url + '"' + title + target + '>' + text + '</a>';
 
     //evt = createEvent(rgx, evtRootName + '.beforeHash', wholeMatch, text, id, url, title, options, globals);
 
