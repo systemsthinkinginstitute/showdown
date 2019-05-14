@@ -1,4 +1,4 @@
-;/*! showdown v 2.0.0-alpha1 - 31-12-2018 */
+;/*! showdown v 2.0.0-alpha1 - 24-10-2018 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -2530,9 +2530,8 @@ showdown.subParser('makehtml.ellipsis', function (text, options, globals) {
 });
 
 /**
- * Turn emoji codes into emojis
- *
- * List of supported emojis: https://github.com/showdownjs/showdown/wiki/Emojis
+ * These are all the transformations that occur *within* block-level
+ * tags like paragraphs, headers, and list items.
  */
 showdown.subParser('makehtml.emoji', function (text, options, globals) {
   'use strict';
@@ -4375,12 +4374,6 @@ showdown.subParser('makeMarkdown.blockquote', function (node, globals) {
   return txt;
 });
 
-showdown.subParser('makeMarkdown.break', function () {
-  'use strict';
-
-  return '\n';
-});
-
 showdown.subParser('makeMarkdown.codeBlock', function (node, globals) {
   'use strict';
 
@@ -4642,10 +4635,6 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
 
     case 'img':
       txt = showdown.subParser('makeMarkdown.image')(node, globals);
-      break;
-
-    case 'br':
-      txt = showdown.subParser('makeMarkdown.break')(node, globals);
       break;
 
     default:
