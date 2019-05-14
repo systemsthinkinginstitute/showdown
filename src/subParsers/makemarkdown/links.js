@@ -10,7 +10,9 @@ showdown.subParser('makeMarkdown.links', function (node, globals) {
       txt += showdown.subParser('makeMarkdown.node')(children[i], globals);
     }
     txt += '](';
-    txt += '<' + node.getAttribute('href') + '>';
+    //we don't need these, and they keep stacking up in plectica
+    // txt += '<' + node.getAttribute('href') + '>';
+    txt += node.getAttribute('href');
     if (node.hasAttribute('title')) {
       txt += ' "' + node.getAttribute('title') + '"';
     }
