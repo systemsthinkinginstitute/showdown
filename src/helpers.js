@@ -6,14 +6,6 @@ if (!showdown.hasOwnProperty('helper')) {
   showdown.helper = {};
 }
 
-if (typeof process === 'object') {
-  var jsdom = require('jsdom');
-  this.window = new jsdom.JSDOM('', {}).window; // jshint ignore:line
-} else {
-  this.window = window;
-}
-showdown.helper.document = this.window.document;
-
 /**
  * Check if var is string
  * @static
