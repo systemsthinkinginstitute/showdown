@@ -1,4 +1,4 @@
-;/*! showdown v 2.0.0-alpha1 - 24-10-2018 */
+;/*! showdown v 12.0.0 - 16-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -2530,8 +2530,9 @@ showdown.subParser('makehtml.ellipsis', function (text, options, globals) {
 });
 
 /**
- * These are all the transformations that occur *within* block-level
- * tags like paragraphs, headers, and list items.
+ * Turn emoji codes into emojis
+ *
+ * List of supported emojis: https://github.com/showdownjs/showdown/wiki/Emojis
  */
 showdown.subParser('makehtml.emoji', function (text, options, globals) {
   'use strict';
@@ -4351,6 +4352,25 @@ showdown.subParser('makehtml.unescapeSpecialChars', function (text, options, glo
   return text;
 });
 
+showdown.subParser('makeMarkdown.block', function (node, globals) {
+  'use strict';
+
+  var txt = '';
+
+  if (node.hasChildNodes()) {
+    var children = node.childNodes,
+        childrenLength = children.length;
+    for (var i = 0; i < childrenLength; ++i) {
+      txt += showdown.subParser('makeMarkdown.node')(children[i], globals);
+    }
+  }
+
+  // some text normalization
+  txt = txt.trim();
+
+  return txt;
+});
+
 showdown.subParser('makeMarkdown.blockquote', function (node, globals) {
   'use strict';
 
@@ -4443,6 +4463,20 @@ showdown.subParser('makeMarkdown.image', function (node) {
       txt += ' "' + node.getAttribute('title') + '"';
     }
     txt += ')';
+  }
+  return txt;
+});
+
+showdown.subParser('makeMarkdown.inline', function (node, globals) {
+  'use strict';
+
+  var txt = '';
+  if (node.hasChildNodes()) {
+    var children = node.childNodes,
+        childrenLength = children.length;
+    for (var i = 0; i < childrenLength; ++i) {
+      txt += showdown.subParser('makeMarkdown.node')(children[i], globals);
+    }
   }
   return txt;
 });
@@ -4608,6 +4642,19 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       if (!spansOnly) { txt = showdown.subParser('makeMarkdown.table')(node, globals) + '\n\n'; }
       break;
 
+    case 'article':
+    case 'section':
+    case 'div':
+    case 'header':
+    case 'footer':
+    case 'nav':
+    case 'aside':
+    case 'canvas':
+    case 'address':
+    case 'figure':
+      if (!spansOnly) { txt = showdown.subParser('makeMarkdown.block')(node, globals) + '\n\n'; }
+      break;
+
     //
     // SPANS
     //
@@ -4638,7 +4685,7 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       break;
 
     default:
-      txt = node.outerHTML + '\n\n';
+      txt = showdown.subParser('makeMarkdown.inline')(node, globals);
   }
 
   // common normalization
@@ -5230,7 +5277,7 @@ showdown.Converter = function (converterOptions) {
       for (var n = 0; n < node.childNodes.length; ++n) {
         var child = node.childNodes[n];
         if (child.nodeType === 3) {
-          if (!/\S/.test(child.nodeValue)) {
+          if (!/\S/.test(child.nodeValue) && !/^[ ]+$/.test(child.nodeValue)) {
             node.removeChild(child);
             --n;
           } else {
