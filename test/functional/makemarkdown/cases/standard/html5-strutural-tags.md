@@ -1,33 +1,30 @@
 These HTML5 tags should pass through just fine.
 
-<section>hello</section>
+hello
 
-<header>head</header>
+head
 
-<footer>footsies</footer>
+footsies
 
-<nav>navigation</nav>
+navigation
 
-<article>read me</article>
+read me
 
-<aside>ignore me</aside>
+ignore me
 
-<article>read me</article>
+read me
 
-<aside> ignore me </aside>
+ignore me
 
 the end
 
-<audio class="podcastplayer" controls=""><source src="foobar.mp3" type="audio/mp3" preload="none"><source src="foobar.off" type="audio/ogg" preload="none"></audio>
+My street
 
-<video src="foo.ogg"><track kind="subtitles" src="foo.en.vtt" srclang="en" label="English"><track kind="subtitles" src="foo.sv.vtt" srclang="sv" label="Svenska"></video>
+Sorry, your browser doesn't support the <canvas> element.
 
-<address>My street</address>
+![An awesome picture](<mypic.png>)Caption for the awesome picture
 
-<canvas id="canvas" width="300" height="300"> Sorry, your browser doesn't support the &lt;canvas&gt; element. </canvas>
+# Main title
 
-<figure><img src="mypic.png" alt="An awesome picture"><figcaption>Caption for the awesome picture</figcaption></figure>
+## Secondary title
 
-<hgroup><h1>Main title</h1><h2>Secondary title</h2></hgroup>
-
-<output name="result"></output>

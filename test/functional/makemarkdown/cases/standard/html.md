@@ -1,6 +1,4 @@
-<div> some text </div>
+some text
 
-<span>an inline element</span>
-
-<div><span>a span inside a div</span></div>
+an inline element
 

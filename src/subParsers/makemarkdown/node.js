@@ -80,6 +80,19 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       if (!spansOnly) { txt = showdown.subParser('makeMarkdown.table')(node, globals) + '\n\n'; }
       break;
 
+    case 'article':
+    case 'section':
+    case 'div':
+    case 'header':
+    case 'footer':
+    case 'nav':
+    case 'aside':
+    case 'canvas':
+    case 'address':
+    case 'figure':
+      if (!spansOnly) { txt = showdown.subParser('makeMarkdown.block')(node, globals) + '\n\n'; }
+      break;
+
     //
     // SPANS
     //
@@ -114,7 +127,7 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       break;
 
     default:
-      txt = node.outerHTML + '\n\n';
+      txt = showdown.subParser('makeMarkdown.inline')(node, globals);
   }
 
   // common normalization
