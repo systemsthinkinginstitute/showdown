@@ -1,4 +1,4 @@
-;/*! showdown v 2.0.0-alpha1 - 14-05-2019 */
+;/*! showdown v 2.0.0-alpha1 - 16-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -581,17 +581,13 @@ if (!showdown.hasOwnProperty('helper')) {
   showdown.helper = {};
 }
 
-// if (typeof this.document === 'undefined' && typeof this.window === 'undefined') {
-//   var jsdom = require('jsdom');
-//   this.window = new jsdom.JSDOM('', {}).window; // jshint ignore:line
-// }
-// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
-// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
-// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
-// NOT GOOD HACK TO MAKE THIS WORK SPECIFICALLY FOR PLECTICA FRONTEND
-this.window = window;
+if (typeof process === 'object') {
+  var jsdom = require('jsdom');
+  this.window = new jsdom.JSDOM('', {}).window; // jshint ignore:line
+} else {
+  this.window = window;
+}
 showdown.helper.document = this.window.document;
-//END HACK
 
 /**
  * Check if var is string
@@ -3389,8 +3385,8 @@ showdown.subParser('makehtml.italicsAndBold', function (text, options, globals) 
 
     //evt = createEvent(rgx, evtRootName + '.captureEnd', wholeMatch, text, id, url, title, options, globals);
 
-    var className = options.linkClassName || '';
-    var result = '<a ' + 'class="' + className + '" ' + 'href="' + url + '"' + title + target + '>' + text + '</a>';
+    var classAttribute = options.linkClassName ? 'class="' + options.linkClassName + '" ' : '';
+    var result = '<a ' + classAttribute + 'href="' + url + '"' + title + target + '>' + text + '</a>';
 
     //evt = createEvent(rgx, evtRootName + '.beforeHash', wholeMatch, text, id, url, title, options, globals);
 
@@ -4364,6 +4360,25 @@ showdown.subParser('makehtml.unescapeSpecialChars', function (text, options, glo
   return text;
 });
 
+showdown.subParser('makeMarkdown.block', function (node, globals) {
+  'use strict';
+
+  var txt = '';
+
+  if (node.hasChildNodes()) {
+    var children = node.childNodes,
+        childrenLength = children.length;
+    for (var i = 0; i < childrenLength; ++i) {
+      txt += showdown.subParser('makeMarkdown.node')(children[i], globals);
+    }
+  }
+
+  // some text normalization
+  txt = txt.trim();
+
+  return txt;
+});
+
 showdown.subParser('makeMarkdown.blockquote', function (node, globals) {
   'use strict';
 
@@ -4462,6 +4477,20 @@ showdown.subParser('makeMarkdown.image', function (node) {
       txt += ' "' + node.getAttribute('title') + '"';
     }
     txt += ')';
+  }
+  return txt;
+});
+
+showdown.subParser('makeMarkdown.inline', function (node, globals) {
+  'use strict';
+
+  var txt = '';
+  if (node.hasChildNodes()) {
+    var children = node.childNodes,
+        childrenLength = children.length;
+    for (var i = 0; i < childrenLength; ++i) {
+      txt += showdown.subParser('makeMarkdown.node')(children[i], globals);
+    }
   }
   return txt;
 });
@@ -4629,6 +4658,19 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       if (!spansOnly) { txt = showdown.subParser('makeMarkdown.table')(node, globals) + '\n\n'; }
       break;
 
+    case 'article':
+    case 'section':
+    case 'div':
+    case 'header':
+    case 'footer':
+    case 'nav':
+    case 'aside':
+    case 'canvas':
+    case 'address':
+    case 'figure':
+      if (!spansOnly) { txt = showdown.subParser('makeMarkdown.block')(node, globals) + '\n\n'; }
+      break;
+
     //
     // SPANS
     //
@@ -4663,7 +4705,7 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       break;
 
     default:
-      txt = node.outerHTML + '\n\n';
+      txt = showdown.subParser('makeMarkdown.inline')(node, globals);
   }
 
   // common normalization
