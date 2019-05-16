@@ -1,4 +1,4 @@
-;/*! showdown v 2.0.0-alpha1 - 16-05-2019 */
+;/*! showdown v 12.1.1 - 16-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -580,14 +580,6 @@ showdown.validateExtension = function (ext) {
 if (!showdown.hasOwnProperty('helper')) {
   showdown.helper = {};
 }
-
-if (typeof process === 'object') {
-  var jsdom = require('jsdom');
-  this.window = new jsdom.JSDOM('', {}).window; // jshint ignore:line
-} else {
-  this.window = window;
-}
-showdown.helper.document = this.window.document;
 
 /**
  * Check if var is string
@@ -5256,6 +5248,23 @@ showdown.Converter = function (converterOptions) {
     return text;
   };
 
+  this.getTempElement = function () {
+    var localWindow;
+    if (typeof window === 'undefined' && typeof document === 'undefined') {
+      var jsdom;
+      // evade webpack's zealous interrogation of dependencies
+      eval('jsdom = require("jsdom")'); // jshint ignore:line
+      localWindow = new jsdom.JSDOM('', {}).window; // jshint ignore:line
+    } else {
+      localWindow = window;
+    }
+
+    this._tempElement = this._tempElement || localWindow.document.createElement('div');
+    this._tempElement.innerHTML = '';
+    return this._tempElement;
+  };
+
+
   /**
    * Converts an HTML string into a markdown string
    * @param src
@@ -5272,7 +5281,8 @@ showdown.Converter = function (converterOptions) {
     // ex: <em>this is</em> <strong>sparta</strong>
     src = src.replace(/>[ \t]+</, '>¨NBSP;<');
 
-    var doc = showdown.helper.document.createElement('div');
+    var doc = this.getTempElement();
+
     doc.innerHTML = src;
 
     var globals = {
