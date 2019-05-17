@@ -1,4 +1,4 @@
-;/*! showdown v 12.1.1 - 16-05-2019 */
+;/*! showdown v 12.1.1 - 17-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -4492,6 +4492,9 @@ showdown.subParser('makeMarkdown.links', function (node, globals) {
 
   var txt = '';
   if (node.hasChildNodes() && node.hasAttribute('href')) {
+    if (node.innerText) {
+      if (node.innerText.trim() === node.getAttribute('href').trim()) { return node.getAttribute('href'); }
+    }
     var children = node.childNodes,
         childrenLength = children.length;
     txt = '[';
