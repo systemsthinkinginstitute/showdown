@@ -1,4 +1,4 @@
-;/*! showdown v 12.1.1 - 17-05-2019 */
+;/*! showdown v 12.1.3 - 20-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -4863,9 +4863,6 @@ showdown.subParser('makeMarkdown.txt', function (node) {
 
   // replace the custom ¨NBSP; with a space
   txt = txt.replace(/¨NBSP;/g, ' ');
-
-  // ", <, > and & should replace escaped html entities
-  txt = showdown.helper.unescapeHTMLEntities(txt);
 
   // escape markdown magic characters
   // emphasis, strong and strikethrough - can appear everywhere
