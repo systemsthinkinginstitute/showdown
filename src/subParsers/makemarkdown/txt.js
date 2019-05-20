@@ -9,9 +9,6 @@ showdown.subParser('makeMarkdown.txt', function (node) {
   // replace the custom ¨NBSP; with a space
   txt = txt.replace(/¨NBSP;/g, ' ');
 
-  // ", <, > and & should replace escaped html entities
-  txt = showdown.helper.unescapeHTMLEntities(txt);
-
   // escape markdown magic characters
   // emphasis, strong and strikethrough - can appear everywhere
   // we also escape pipe (|) because of tables
