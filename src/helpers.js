@@ -390,6 +390,14 @@ showdown.helper.unescapeHTMLEntities = function (txt) {
     .replace(/&amp;/g, '&');
 };
 
+showdown.helper.escapeHTMLEntities = function (txt) {
+  return txt
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+};
+
 showdown.helper._hashHTMLSpan = function (html, globals) {
   return '¨C' + (globals.gHtmlSpans.push(html) - 1) + 'C';
 };

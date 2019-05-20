@@ -303,6 +303,10 @@ showdown.Converter = function (converterOptions) {
       text = rTrimInputText(text);
     }
 
+    // get us back our escaped angle brackets
+    text = text.replace(/\\</g, '&lt;');
+    text = text.replace(/\\>/g, '&gt;');
+
     // Make sure text begins and ends with a couple of newlines:
     text = '\n\n' + text + '\n\n';
 

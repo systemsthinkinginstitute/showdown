@@ -20,7 +20,7 @@ the end
 
 My street
 
-Sorry, your browser doesn't support the <canvas> element.
+Sorry, your browser doesn't support the \<canvas\> element.
 
 ![An awesome picture](<mypic.png>)Caption for the awesome picture
 

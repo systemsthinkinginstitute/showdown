@@ -18,8 +18,9 @@ showdown.subParser('makeMarkdown.txt', function (node) {
   // and escape ` because of code blocks and spans
   txt = txt.replace(/([*_~|`])/g, '\\$1');
 
-  // escape > because of blockquotes
-  txt = txt.replace(/^(\s*)>/g, '\\$1>');
+  // escape <> because of blockquotes and html
+  txt = txt.replace(/<(\S)/g, '\\<$1');
+  txt = txt.replace(/(^|\S)>/g, '$1\\>');
 
   // hash character, only troublesome at the beginning of a line because of headers
   txt = txt.replace(/^#/gm, '\\#');
