@@ -1,4 +1,4 @@
-;/*! showdown v 12.1.3 - 20-05-2019 */
+;/*! showdown v 12.1.4 - 20-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -4857,6 +4857,9 @@ showdown.subParser('makeMarkdown.txt', function (node) {
   'use strict';
 
   var txt = node.nodeValue;
+
+  // escape backslashes
+  txt = txt.replace(/\\/g, '\\\\');
 
   // multiple spaces are collapsed
   txt = txt.replace(/ +/g, ' ');
