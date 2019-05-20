@@ -3,6 +3,9 @@ showdown.subParser('makeMarkdown.txt', function (node) {
 
   var txt = node.nodeValue;
 
+  // escape backslashes
+  txt = txt.replace(/\\/g, '\\\\');
+
   // multiple spaces are collapsed
   txt = txt.replace(/ +/g, ' ');
 
