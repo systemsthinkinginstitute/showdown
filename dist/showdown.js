@@ -1,4 +1,4 @@
-;/*! showdown v 12.1.4 - 20-05-2019 */
+;/*! showdown v 12.1.5 - 20-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -963,6 +963,14 @@ showdown.helper.unescapeHTMLEntities = function (txt) {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&');
+};
+
+showdown.helper.escapeHTMLEntities = function (txt) {
+  return txt
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 };
 
 showdown.helper._hashHTMLSpan = function (html, globals) {
@@ -4873,8 +4881,9 @@ showdown.subParser('makeMarkdown.txt', function (node) {
   // and escape ` because of code blocks and spans
   txt = txt.replace(/([*_~|`])/g, '\\$1');
 
-  // escape > because of blockquotes
-  txt = txt.replace(/^(\s*)>/g, '\\$1>');
+  // escape <> because of blockquotes and html
+  txt = txt.replace(/<(\S)/g, '\\<$1');
+  txt = txt.replace(/(^|\S)>/g, '$1\\>');
 
   // hash character, only troublesome at the beginning of a line because of headers
   txt = txt.replace(/^#/gm, '\\#');
@@ -5201,6 +5210,10 @@ showdown.Converter = function (converterOptions) {
     if (options.smartIndentationFix) {
       text = rTrimInputText(text);
     }
+
+    // get us back our escaped angle brackets
+    text = text.replace(/\\</g, '&lt;');
+    text = text.replace(/\\>/g, '&gt;');
 
     // Make sure text begins and ends with a couple of newlines:
     text = '\n\n' + text + '\n\n';
