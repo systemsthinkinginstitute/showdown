@@ -1,4 +1,4 @@
-;/*! showdown v 12.1.5 - 20-05-2019 */
+;/*! showdown v 12.1.6 - 21-05-2019 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -950,27 +950,36 @@ showdown.helper.padEnd = function padEnd (str, targetLength, padString) {
   }
 };
 
-/**
- * Unescape HTML entities
- * @param txt
- * @returns {string}
- */
-showdown.helper.unescapeHTMLEntities = function (txt) {
-  'use strict';
-
-  return txt
-    .replace(/&quot;/g, '"')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&');
+showdown.helper.escapeHTMLEntities = function (s) {
+  var escaped = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '\'': '&#39;',
+    '"': '&quot;'
+  };
+  return s.replace(/[&<>'"]/g, function (m) {
+    return escaped[m];
+  });
 };
 
-showdown.helper.escapeHTMLEntities = function (txt) {
-  return txt
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+showdown.helper.unescapeHTMLEntities = function (s) {
+  var re = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  var unescaped = {
+    '&amp;': '&',
+    '&#38;': '&',
+    '&lt;': '<',
+    '&#60;': '<',
+    '&gt;': '>',
+    '&#62;': '>',
+    '&apos;': '\'',
+    '&#39;': '\'',
+    '&quot;': '"',
+    '&#34;': '"'
+  };
+  return s.replace(re, function (m) {
+    return unescaped[m];
+  });
 };
 
 showdown.helper._hashHTMLSpan = function (html, globals) {
